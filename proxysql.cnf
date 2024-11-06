@@ -1,0 +1,72 @@
+datadir="/var/lib/proxysql"
+
+admin_variables=
+{
+  @include "/etc/admin_credentials.cnf"
+  mysql_ifaces="0.0.0.0:6032"
+  debug=false
+}
+
+mysql_variables=
+{
+  
+  interfaces="0.0.0.0:6033"
+  default_query_delay=0
+  default_query_timeout=3600000
+  max_connections=50
+  monitor_enabled=false
+  threads=4
+}
+
+mysql_servers =
+(
+  {
+    address="mysql"
+    hostgroup=0
+    max_connections=200
+    port=3306
+  },
+)
+
+mysql_users:
+(
+  {
+    active=1
+    authentication_plugin="caching_sha2_password"
+    default_hostgroup=0
+    max_connections=200
+    password="test"
+    username="root"
+  },
+  {
+    active=1
+    authentication_plugin="caching_sha2_password"
+    default_hostgroup=0
+    max_connections=200
+    password="test"
+    username="user"
+  },
+)
+
+mysql_query_rules:
+(
+  {
+    rule_id=1
+    active=1
+    apply=1
+    destination_hostgroup=0
+    match_pattern=".*"
+  },
+)
+
+proxysql_servers=
+( 
+)
+
+scheduler=
+(
+)
+
+mysql_replication_hostgroups=
+(
+)

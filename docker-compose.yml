@@ -1,0 +1,32 @@
+services:
+  # https://hub.docker.com/_/mysql
+  mysql:
+    container_name: mysql
+    image: mysql:9.1.0-oraclelinux9
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: user
+      MYSQL_PASSWORD: test
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+        test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ptest"]
+        interval: 5s
+        retries: 3
+        start_period: 10s
+        timeout: 10s
+  # https://hub.docker.com/r/proxysql/proxysql
+  proxysql:
+    container_name: proxysql
+    image: proxysql/proxysql:2.7.1-debian
+    volumes:
+      - ./admin_credentials.cnf:/etc/admin_credentials.cnf
+      - ./proxysql.cnf:/etc/proxysql.cnf
+    depends_on:
+      - mysql
+  client:
+    container_name: client
+    build:
+      context: .
+    command: ["sleep", "infinity"]
